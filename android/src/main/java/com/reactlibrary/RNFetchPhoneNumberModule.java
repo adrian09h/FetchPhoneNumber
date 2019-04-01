@@ -1,6 +1,9 @@
 
 package com.reactlibrary;
 
+import android.content.Context;
+import android.telephony.TelephonyManager;
+
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -18,5 +21,22 @@ public class RNFetchPhoneNumberModule extends ReactContextBaseJavaModule {
   @Override
   public String getName() {
     return "RNFetchPhoneNumber";
+  }
+
+  @ReactMethod
+  public void getPhoneNumber(Callback callback)
+  {
+
+    TelephonyManager telephonyManager = (TelephonyManager)getCurrentActivity().getSystemService(reactContext.TELEPHONY_SERVICE);
+    if (telephonyManager != null){
+      String phoneNum = telephonyManager.getLine1Number();
+      if (phoneNum != null){
+        callback.invoke(phoneNum);
+      }else{
+        callback.invoke("");
+      }
+    }else{
+      callback.invoke("");
+    }
   }
 }
